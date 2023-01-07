@@ -9,8 +9,7 @@ export default class EleitorController {
         return res.json({ id })
     }
     public static async find(req: Request, res: Response) {
-        let eleitores : Eleitor[] = await EleitorRepository.get()
-        eleitores = eleitores.map( (eleitor : any) => { delete eleitor.senha; return eleitor })
+        let eleitores : Eleitor[] = await EleitorRepository.getWithoutPassword()
         return res.json(eleitores )
     }
 }

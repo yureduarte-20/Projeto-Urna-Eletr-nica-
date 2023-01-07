@@ -7,6 +7,7 @@ export async function up(knex: Knex): Promise<void> {
         table.string('titulo', 12).unique().notNullable();
         table.string('nome', 60).notNullable()
         table.string('senha').notNullable()
+        table.timestamps({ defaultToNow: true })
     })
 }
 

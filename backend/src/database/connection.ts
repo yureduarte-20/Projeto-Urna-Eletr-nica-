@@ -1,10 +1,11 @@
 import knex from "knex";
 const connection = knex({
-    client:'sqlite3',
-    connection:{
-        filename:'src/database/db.sqlite3'
+    client: 'sqlite3',
+    useNullAsDefault: true,
+     connection: {
+        filename: 'src/database/db.sqlite3'
     },
-    migrations:{
+    migrations: {
         directory: '../migrations'
     }
 })

@@ -16,6 +16,7 @@ export default class EleitorRepository {
                 })
         })
     }
+    
     public static async get(whereCondition?: string): Promise<Eleitor[]> {
         return new Promise((resolve, reject) => {
             if (whereCondition) {
@@ -24,6 +25,7 @@ export default class EleitorRepository {
             connection(ELEITOR_TABLE).select<Eleitor[]>('*').then(resolve).catch(reject)
         })
     }
+
     public static async getWithoutPassword(whereCondition?: string): Promise<Eleitor[]> {
         return new Promise((resolve, reject) => {
             if (whereCondition) {
