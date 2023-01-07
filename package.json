@@ -1,0 +1,9 @@
+{
+    "name": "my-workspaces-powered-project",
+    "workspaces": [
+        "backend"
+    ],
+    "scripts": {
+        "start": "npm run -w backend dev"
+    }
+}
