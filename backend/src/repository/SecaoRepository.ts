@@ -5,7 +5,7 @@ import Secao from "../model/Secao"
 export default class SecaoRepository {
     public static async save({ nome, tipo, zona_id }: Secao): Promise<{ id: number }> {
         return new Promise((res, rej) => {
-            connection(SECOES_TABLE).insert({ nome, tipo,zona_id  })
+            connection(SECOES_TABLE).insert({ nome, tipo, zona_id })
                 .then(data => res({ id: data[0] }))
                 .catch(rej)
         })
@@ -14,5 +14,17 @@ export default class SecaoRepository {
         if (where)
             return connection(SECOES_TABLE).select<Secao[]>('*').where(where)
         return connection(SECOES_TABLE).select<Secao[]>('*')
+    }
+    public static async saveMany(secoes: Secao[]) {
+        return new Promise((resolve, reject) => {
+            connection.transaction(async trx => {
+                return trx.insert<Secao[]>(secoes).into(SECOES_TABLE)
+                    .transacting(trx)
+                    .then(trx.commit)
+                    .catch(trx.rollback)
+            })
+                .then(resolve)
+                .catch(reject)
+        })
     }
 }

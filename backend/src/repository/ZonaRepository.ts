@@ -2,14 +2,20 @@ import knex from "knex";
 import connection from "../database/connection";
 import { ZONAS_TABLES } from "../migrations/20230107213717_zonas_migration";
 import { SECOES_TABLE } from "../migrations/20230107213735_secoes_migration";
+import Secao from "../model/Secao";
 import Zona from "../model/Zona";
+import SecaoRepository from "./SecaoRepository";
 
 export default class ZonaRepository {
-    public static async save({ nome, tipo }: Zona): Promise<{ id: number }> {
-        return new Promise((res, rej) => {
-            connection(ZONAS_TABLES).insert({ nome, tipo })
-                .then(data => res({ id: data[0] }))
-                .catch(rej)
+    public static async save({ nome, tipo, secoes }: Zona): Promise<Zona> {
+        return new Promise(async (res, rej) => {
+            const [zona_id] = await connection(ZONAS_TABLES).insert({ nome, tipo })
+            if(secoes){
+                for(let secao of secoes){
+                    secao.zona_id = zona_id
+                }
+                SecaoRepository.saveMany(secoes).then(() =>{ res({ id: zona_id, nome, tipo, secoes }) }).catch(rej)
+            }
         })
     }
 
