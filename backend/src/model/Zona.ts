@@ -5,9 +5,10 @@ export default class Zona {
     nome: string;
     tipo: string;
     id?:number
-    constructor({ secoes, nome, tipo }: { secoes?: Secao[], nome: string, tipo: string }) {
+    constructor({ secoes, nome, tipo, id }: { secoes?: Secao[], nome: string, tipo: string, id?:number }) {
         this.secoes = secoes;
         this.nome = nome
         this.tipo = tipo
+        this.id = id
     }
 }

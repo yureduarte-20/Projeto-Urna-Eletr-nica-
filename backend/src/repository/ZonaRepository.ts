@@ -8,15 +8,24 @@ import SecaoRepository from "./SecaoRepository";
 
 export default class ZonaRepository {
     public static async save({ nome, tipo, secoes }: Zona): Promise<Zona> {
-        return new Promise(async (res, rej) => {
-            const [zona_id] = await connection(ZONAS_TABLES).insert({ nome, tipo })
-            if(secoes){
-                for(let secao of secoes){
+        const trx = await connection.transaction()
+        try {
+            const [zona_id] = await trx(ZONAS_TABLES).insert({ nome, tipo })
+            if (secoes) {
+                for (let secao of secoes) {
                     secao.zona_id = zona_id
                 }
-                SecaoRepository.saveMany(secoes).then(() =>{ res({ id: zona_id, nome, tipo, secoes }) }).catch(rej)
+                await trx(SECOES_TABLE).insert(secoes)
+
             }
-        })
+            await trx.commit();
+            return Promise.resolve(new Zona({ id: zona_id , nome, tipo, secoes}))
+
+        } catch (e) {
+            await trx.rollback();
+            throw e
+        }
+
     }
 
     public static async get(where?: string): Promise<Zona[]> {

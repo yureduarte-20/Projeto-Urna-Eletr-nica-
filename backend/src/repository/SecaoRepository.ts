@@ -17,14 +17,11 @@ export default class SecaoRepository {
     }
     public static async saveMany(secoes: Secao[]) {
         return new Promise((resolve, reject) => {
-            connection.transaction(async trx => {
-                return trx.insert<Secao[]>(secoes).into(SECOES_TABLE)
-                    .transacting(trx)
-                    .then(trx.commit)
-                    .catch(trx.rollback)
-            })
+            connection.insert<Secao[]>(secoes).into(SECOES_TABLE)
                 .then(resolve)
                 .catch(reject)
         })
+
+
     }
 }
